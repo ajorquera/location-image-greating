@@ -1,8 +1,8 @@
 import {Router} from 'express';
-import helloWorld from '../controllers/helloWorld';
+import greetings from '../controllers/greetings';
 
 const routes = Router();
 
-routes.get('/', helloWorld);
+routes.get('/greatings', greetings);
 
 export default routes;
