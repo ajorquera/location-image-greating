@@ -1,7 +1,7 @@
 import axios from "axios";
 import { RequestHandler } from "express";
-import {IP_REGISTRY_API_KEY, IP_REGISTRY_DOMAIN, IS_LOCAL, DEFAULT_IP_ADDRESS} from '../env';
-import * as textToImage from 'text-to-image';
+import {IP_REGISTRY_API_KEY, IP_REGISTRY_DOMAIN, IS_LOCAL, DEFAULT_IP_ADDRESS} from '../../env';
+import generateImg from "./generateImg";
 
 interface IPRegistryResponse {
   location: {
@@ -22,8 +22,11 @@ const getUrl = (ipAddress:string) => `https://${IP_REGISTRY_DOMAIN}/${ipAddress}
 const createMessage = (data: IPRegistryResponse) => {
   const {country, city, language} = data.location;
   return `
-    Hello stranger, thanks for visiting us from ${city}, ${country.name}. \n
-    We hope we can learn more about "${language.code}" for a more special message 😛
+
+Hello stranger, thanks for visiting us from ${city}, ${country.name}.
+
+We hope we can learn more about "${language.code}" for a more special message 😛
+
   `;
 };
 
@@ -43,8 +46,7 @@ const greatings: RequestHandler = async (req, res, next) => {
 
   try {
     const message = createMessage(resData);
-    const imgBase64 = await textToImage.generate(message, {});
-    image = Buffer.from(imgBase64.replace(/^data:image\/png;base64,/, ''), 'base64');
+    image = await generateImg(message);
 
   } catch (e) {
     return next({code: 'IMAGE_GENERATION_ERROR', data: e});

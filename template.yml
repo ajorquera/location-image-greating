@@ -7,7 +7,7 @@ Globals:
   Function:
     CodeUri: ./dist/
     Runtime: nodejs14.x
-    MemorySize: 128
+    MemorySize: 256
     Timeout: 5
 
 Parameters:
@@ -15,6 +15,14 @@ Parameters:
     Description: Name of Application
     Type: String
     Default: apigw-http-api-lambda
+
+  IpRegistryApiKey:
+    Description: API KEY for using the ip registration API
+    Type: String
+
+  IpRegistryDomain:
+    Description: Domain for the Ip registration api
+    Type: String
 
 Resources:
   HttpApi:
@@ -32,6 +40,10 @@ Resources:
     Properties:
       FunctionName: !Sub '${AppName}-function'
       Handler: index.handler
+      Environment:
+        Variables:
+          IP_REGISTRY_API_KEY: !Ref IpRegistryApiKey
+          IP_REGISTRY_DOMAIN: !Ref IpRegistryDomain
 
   # Function permissions grant an AWS service or another account permission to use a function
   FunctionResourcePermission:
