@@ -25,9 +25,11 @@ const createMessage = (data: IPRegistryResponse) => {
 
 Hello stranger, thanks for visiting us from ${city}, ${country.name}.
 
-We hope we can learn more about "${language.code}" for a more special message 😛
+We hope we can learn more about "${language.code}" for a more special message. 
 
-  `;
+I wisth you the best
+
+`;
 };
 
 const greatings: RequestHandler = async (req, res, next) => {

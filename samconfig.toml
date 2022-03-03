@@ -2,11 +2,10 @@ version = 0.1
 [default]
 [default.deploy]
 [default.deploy.parameters]
-stack_name = "lambda-example"
-s3_bucket = "aws-sam-cli-managed-default-samclisourcebucket-nt8r05bu3c5u"
-s3_prefix = "lambda-example"
 region = "us-east-2"
-confirm_changeset = true
-capabilities = "CAPABILITY_IAM"
 parameter_overrides = "AppName=\"location-image-greating\""
-image_repositories = []
+stack_name = "sam-app"
+s3_bucket = "aws-sam-cli-managed-default-samclisourcebucket-1hxbb2nawd7x0"
+s3_prefix = "sam-app"
+capabilities = "CAPABILITY_IAM"
+image_repositories = ["LambdaFunction=658068096501.dkr.ecr.us-east-2.amazonaws.com/samapp7427b055/lambdafunctiondfe28c74repo"]

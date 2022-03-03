@@ -1,0 +1,6 @@
+{ 
+  "body": null,
+  "httpMethod": "GET",
+  "path": "/greatings",
+  "requestContext": {}
+}

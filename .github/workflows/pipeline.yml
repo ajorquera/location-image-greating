@@ -12,20 +12,19 @@ jobs:
       - name: npm install, test and build
         run: |
           yarn
-          yarn ci
-          yarn build
-          rm -r node_modules
-          yarn install --production
-          mv node_modules dist/node_modules
-      - uses: aws-actions/setup-sam@v1
+          yarn CI
+
       - uses: aws-actions/configure-aws-credentials@v1
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ secrets.AWS_REGION }}
+
+      - uses: aws-actions/setup-sam@v1
+
       # Build inside Docker containers
-      - run: sam build --use-container
+      - run: sam build --use-container --container-env-var IP_REGISTRY_API_KEY=${{ secrets.IP_REGISTRY_API_KEY }} --container-env-var IP_REGISTRY_DOMAIN=${{ secrets.IP_REGISTRY_DOMAIN }}
       # Prevent prompts and failure when the stack is unchanged
-      - run: sam deploy --no-confirm-changeset --no-fail-on-empty-changeset --parameter-overrides IpRegistryApiKey=${{ secrets.IP_REGISTRY_API_KEY }} IpRegistryDomain=${{ secrets.IP_REGISTRY_DOMAIN }}
+      - run: sam deploy 
 
 

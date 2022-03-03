@@ -1,14 +1,28 @@
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-const gm = require('gm').subClass({ imageMagick: true });
+import childProcess from "child_process";
+const textToImage = require('text-to-image');
+const	spawnPromise = function (command: string, argsarray: string[], envOptions?: childProcess.SpawnOptions) {
+  return new Promise<string | Buffer>((resolve, reject) => {
+    
+    const childProc = childProcess.spawn(command, argsarray, envOptions || {env: process.env, cwd: process.cwd()});
+    const resultBuffers: Uint8Array[] = [];
 
-const generateImg = async (message: string) => {
-  return new Promise<Buffer>((resolve, reject) => {
-    gm(450, 70, '#fff')
-    .drawText(10, 30, message)
-    .toBuffer('PNG', (error: unknown, buffer: Buffer) => {
-      error ? reject(error) : resolve(buffer);
+    childProc.stdout?.on('data', buffer => resultBuffers.push(buffer));
+    
+    childProc.on('exit', (code, signal) => {
+      if (code || signal) {
+        reject(`${command} failed with ${code || signal}`);
+      } else {
+        resolve(Buffer.concat(resultBuffers).toString().trim());
+      }
     });
   });
+	};
+
+const generateImg = async (message: string) => {
+  const imageBase64 = await textToImage.generate(message);
+  const cleanStr = imageBase64.replace('data:image/png;base64,','');
+
+  return Buffer.from(cleanStr, 'base64');
 };
 
 export default generateImg;
